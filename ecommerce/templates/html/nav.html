@@ -24,7 +24,7 @@
     {% if title %}
     <title>{{ title }}</title>
     {% else %}
-    <title>AirCart</title>
+    <title>LiveMart</title>
     {% endif %}
     
     <link rel="stylesheet" href="{% static 'assests/nav.css' %}" />
@@ -45,8 +45,8 @@
                         <li class="navbar-part-group nav-link"><a href="{% url 'homeMain' %}" class="badge">Home<span class="material-icons">home</span></a></li>
                         <li class="navbar-part-group nav-link"><a href="{% url 'register' %}" class="badge">Register<span class="material-icons">how_to_reg</span></a></li>
                         <li class="navbar-part-group nav-link"><a href="{% url 'signin' %}" class="badge">Log in<span class="material-icons">lock_open</span></a></li>
-                        <!-- <li class="navbar-part-group nav-link"><a href="{% url 'contact' %}" class="badge"> Contact<span class="material-icons">contact_support</span></a></li>
-                        <li class="navbar-part-group nav-link"><a  href="{% url 'about' %} " class="badge">About<span class="material-icons">description</span></a></li> -->
+                        <li class="navbar-part-group nav-link"><a href="{% url 'contact' %}" class="badge"> Feedback<span class="material-icons">contact_support</span></a></li>
+                        <!-- <li class="navbar-part-group nav-link"><a  href="{% url 'about' %} " class="badge">About<span class="material-icons">description</span></a></li> --> -->
                         <li class="navbar-part-group nav-link">
                                           <form class="search" action='/s/'> 
                                                 {% comment %} /s/ for searching {% endcomment %}
@@ -66,7 +66,7 @@
                                                     <button class='search-btn' type="submit"><span class="material-icons search-icon">search</span></button>
                                                 </form>
                         </li>
-                        {% comment %} <li class="navbar-part-group1"><a href="{% url 'contact' %}"> Contact</a></li> {% endcomment %}
+                        {% comment %} <li class="navbar-part-group1"><a href="{% url 'contact' %}"> Feedback</a></li> {% endcomment %}
                     {% endif %}
                   
               </ul>
