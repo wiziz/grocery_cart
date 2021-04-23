@@ -222,11 +222,11 @@ class ProductDetail(LoginRequiredMixin, DetailView):
 
 class CreateProduct(UserPassesTestMixin, LoginRequiredMixin, CreateView):
     def test_func(self):
-        return not self.request.user.groups.filter(name='customer').exists()
+        return not self.request.user.groups.filter(name='Customer').exists()
     model = Product
     template_name = 'store/create_Product.html'
-    fields = ['name', 'description', 'price', 'photo', 'availability']
-    success_url = reverse_lazy('products')
+    fields = ['title', 'description', 'price', 'photo', 'availability']
+    success_url = reverse_lazy('homeMain')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -238,7 +238,7 @@ class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
         return not self.request.user.groups.filter(name='customer').exists()
     model = Product
     template_name = 'store/update_Product.html'
-    fields = ['name', 'description', 'price', 'photo', 'availability']
+    fields = ['title', 'description', 'price', 'photo', 'availability']
     success_url = reverse_lazy('products')
 
 

@@ -20,6 +20,8 @@ class Product(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=100, default=0.0)
     salePrice = models.DecimalField( decimal_places=2, max_digits=100, default=0.0)
     slug = models.SlugField()
+    photo = models.ImageField(upload_to='images', null=True)
+    availability = models.IntegerField(default=0)
     category = models.CharField(max_length=120, choices=STATUS_CHOICES, default="Others")
     timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
