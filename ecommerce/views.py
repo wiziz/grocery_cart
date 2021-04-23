@@ -225,12 +225,24 @@ class CreateProduct(UserPassesTestMixin, LoginRequiredMixin, CreateView):
         return not self.request.user.groups.filter(name='Customer').exists()
     model = Product
     template_name = 'store/create_Product.html'
-    fields = ['title', 'description', 'price', 'photo', 'availability']
-    success_url = reverse_lazy('homeMain')
+    fields = ['title', 'description', 'price', 'salePrice', 'photo', 'slug', 'availability', 'category']
+    success_url = reverse_lazy('uploadimages')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(CreateProduct, self).form_valid(form)
+
+class UploadImages(LoginRequiredMixin, CreateView):
+    def test_func(self):
+        return not self.request.user.groups.filter(name='Customer').exists()
+    model = ProductImage
+    template_name = 'store/create_Product.html'
+    fields = ['product', 'featured', 'image']
+    success_url = reverse_lazy('homeMain')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(UploadImages, self).form_valid(form)
 
 
 class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
@@ -239,7 +251,7 @@ class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'store/update_Product.html'
     fields = ['title', 'description', 'price', 'photo', 'availability']
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('homeMain')
 
 
 class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
@@ -248,6 +260,6 @@ class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     model = Product
     context_object_name = 'productsObject'
     template_name = 'store/delete_Product.html'
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('homeMain')
 
 
