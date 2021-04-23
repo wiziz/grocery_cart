@@ -239,7 +239,7 @@ class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'store/update_Product.html'
     fields = ['title', 'description', 'price', 'photo', 'availability']
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('homeMain')
 
 
 class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
@@ -248,6 +248,6 @@ class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     model = Product
     context_object_name = 'productsObject'
     template_name = 'store/delete_Product.html'
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('homeMain')
 
 
