@@ -48,11 +48,8 @@ class Product(models.Model):
 
 
 
-    
-        
-
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='')
     featured = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
