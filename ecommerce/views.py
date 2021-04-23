@@ -10,7 +10,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from accounts.views import *
-
+from orders.views import checkout, orders, time_shipping
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.list import ListView
@@ -262,4 +262,18 @@ class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     template_name = 'store/delete_Product.html'
     success_url = reverse_lazy('homeMain')
 
+class OrderList(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'store/order.html'
+    context_object_name = 'productsObject'
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Customer').exists()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productsObject'] = context['productsObject'].filter(
+            user=self.request.user.id)
+
+        return context
 
