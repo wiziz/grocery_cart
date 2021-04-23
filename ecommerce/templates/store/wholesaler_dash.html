@@ -1,0 +1,61 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+
+
+<div class="header-bar">
+    <div>
+        <h1>Hello {{request.user|title}}</h1>
+        
+    </div>
+    {% if request.user.is_authenticated %}
+        <a href = "{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+    <a href ="{% url 'cart' %}">Your Cart</a>
+</div>
+
+
+
+
+<h1>Products List</h1>
+<h3><a href="{% url 'createProduct'%}">Add Products</a></h3>
+
+<div id="search-add-wrapper">
+    <form method="GET" style="display: flex;">
+        <input type='text', name='search-area' value = {{search_input}}>
+    <input type='submit' value='Search'>
+    </form>
+
+</div>
+
+
+<div id="tasklist" class="task-items-wrapper">
+    <div class="task-wrapper" data-position="{{task.pk}}">
+        <div class="task-title">
+            <table>
+                <tr>
+                    <th>Items</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                {% for product in productsObject%}
+                <tr>
+                    <td><img src = "{{product.photo.url}}">{{product.name}}</td>
+                    <td>{{product.price}}</td>
+                    <td><a href = "/details/{{product.id}}/">View</a></td>
+                    <td><a href = "/updateProduct/{{product.id}}/">Edit</a></td>
+                    <td><a href = "/deleteProduct/{{product.id}}/">Delete</a></td>
+                </tr>
+                {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

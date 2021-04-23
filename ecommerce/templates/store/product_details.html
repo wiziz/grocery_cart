@@ -1,0 +1,22 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+
+<div class="header-bar">
+    <h1>Product Details</h1>
+</div>
+<div class="header-bar">
+    <a href = "{% url 'products' %}">&#8592;Go Back</a>
+  </div>
+
+<div class="card-body"></div>
+    <h3>{{details.name}}</h3>
+    <img src = "{{details.photo.url}}">
+    <h3>{{details.price}}</h3>
+    <h3>{{details.description}}</h3>
+    <h3>{{details.availability}}</h3>
+    <h3>{{details.created}}</h3>
+</div>
+
+{% endblock content %}
+

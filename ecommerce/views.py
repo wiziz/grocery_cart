@@ -11,20 +11,38 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from accounts.views import *
 
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.template import RequestContext, Template
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.urls import reverse_lazy, reverse
+from django import forms
+
 # from .forms import ContactForm
 
 def homeMain(request):
     product = Product.objects.all()
-    try:
-        cart = Cart.objects.get(user=request.user, ordered=False)
-        totalCount = cart.cartitem_set.count()
-        request.session['key'] = totalCount
-    except:
-        pass
-    context = {'product': product,
-               'title': 'Home Page', }
-    template = 'html/homeMain.html'
-    return render(request, template, context)
+    if request.user.groups.filter(name='Customer').exists():
+        try:
+            cart = Cart.objects.get(user=request.user, ordered=False)
+            totalCount = cart.cartitem_set.count()
+            request.session['key'] = totalCount
+        except:
+            pass
+        context = {'product': product,
+                'title': 'Home Page', }
+        template = 'html/homeMain.html'
+        return render(request, template, context)
+    elif request.user.groups.filter(name='Retailer').exists():
+        return redirect('retailerDash')
+    else :
+        return redirect('wholesalerDash')
 
 def search(request): 
     try:
@@ -153,5 +171,83 @@ def contact(request):
     template = 'accounts/newaddress.html'
     return render(request, template, context)
 
+class RetailerDash(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'store/retailer_dash.html'
+    context_object_name = 'userObject'
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Retailer').exists()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['userObject'] = context['userObject']
+
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['userObject'] = context['userObject'].filter(
+                name__icontains=search_input)
+
+            context['search_input'] = search_input
+        return context
+
+
+class WholesalerDash(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    model = Product
+    template_name = 'store/wholesaler_dash.html'
+    context_object_name = 'productsObject'
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Wholesaler').exists()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productsObject'] = context['productsObject'].filter(
+            user=self.request.user.id)
+
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['productsObject'] = context['productsObject'].filter(
+                name__icontains=search_input)
+
+            context['search_input'] = search_input
+        return context
+
+
+class ProductDetail(LoginRequiredMixin, DetailView):
+    model = Product
+    template_name = 'store/product_details.html'
+    context_object_name = 'details'
+
+
+class CreateProduct(UserPassesTestMixin, LoginRequiredMixin, CreateView):
+    def test_func(self):
+        return not self.request.user.groups.filter(name='customer').exists()
+    model = Product
+    template_name = 'store/create_Product.html'
+    fields = ['name', 'description', 'price', 'photo', 'availability']
+    success_url = reverse_lazy('products')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(CreateProduct, self).form_valid(form)
+
+
+class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+    def test_func(self):
+        return not self.request.user.groups.filter(name='customer').exists()
+    model = Product
+    template_name = 'store/update_Product.html'
+    fields = ['name', 'description', 'price', 'photo', 'availability']
+    success_url = reverse_lazy('products')
+
+
+class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    def test_func(self):
+        return not self.request.user.groups.filter(name='customer').exists()
+    model = Product
+    context_object_name = 'productsObject'
+    template_name = 'store/delete_Product.html'
+    success_url = reverse_lazy('products')
 
 

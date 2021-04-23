@@ -139,3 +139,6 @@ STATICFILES_DIRS =[os.path.join(BASE_DIR,'static')]
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
 django_heroku.settings(locals())
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'signin'

@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url, include, re_path
 from . import views
+from .views import ProductDetail, CreateProduct, UpdateProduct, DeleteProduct, RetailerDash, WholesalerDash
 from .views import register, homeMain, about, signin, logout_views, UniqueProduct, search, category, contact
 from carts.views import cart, update_cart, delete_cart
 from orders.views import checkout, orders, time_shipping
@@ -50,4 +51,10 @@ urlpatterns = [
     # the profile of costumer
     path('profile', profile, name='profile'), 
     path('time_shipping', time_shipping, name='time_shipping'), 
+    path('details/<int:pk>/', ProductDetail.as_view(), name='details'),
+    path('createProduct/', CreateProduct.as_view(), name='createProduct'),
+    path('updateProduct/<int:pk>/', UpdateProduct.as_view(), name='updateProduct'),
+    path('deleteProduct/<int:pk>/', DeleteProduct.as_view(), name='deleteProduct'),
+    path('retailerDash/', RetailerDash.as_view(), name='retailerDash'),
+    path('wholesalerDash/', WholesalerDash.as_view(), name='wholesalerDash'),
 ]

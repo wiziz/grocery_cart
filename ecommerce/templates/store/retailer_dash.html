@@ -1,0 +1,11 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+
+<h1>Retailer Dashboard</h1>
+{% for user in userObject%}
+
+<td><a href = "/deleteUser/{{user.id}}/">Delete User {{user.username}}</a></td>
+{% endfor %}
+
+{% endblock content %}

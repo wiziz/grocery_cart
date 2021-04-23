@@ -1,0 +1,20 @@
+{% extends 'store/main.html' %}
+
+{% block content %}
+
+<div class="header-bar">
+    <h1>Your Account</h1>
+</div>
+<div class="header-bar">
+    <a href = "{% url 'products' %}">&#8592;Go Back</a>
+  </div>
+
+<div class="card-body"></div>
+    <h3>{{details.username}}</h3>
+    <h3>{{details.email}}</h3>
+    <h3>{{details.user.group}}</h3>
+    <h3>{{details.postal_code}}</h3>
+</div>
+
+{% endblock content %}
+
