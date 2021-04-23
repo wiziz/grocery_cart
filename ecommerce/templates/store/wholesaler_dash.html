@@ -46,7 +46,7 @@
                 </tr>
                 {% for product in productsObject%}
                 <tr>
-                    <td><img src = "{{product.photo.url}}">{{product.name}}</td>
+                    <td><img src = "{{product.photo.url}}">{{product.title}}</td>
                     <td>{{product.price}}</td>
                     <td><a href = "/details/{{product.id}}/">View</a></td>
                     <td><a href = "/updateProduct/{{product.id}}/">Edit</a></td>

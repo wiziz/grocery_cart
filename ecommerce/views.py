@@ -10,7 +10,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from accounts.views import *
-
+from orders.views import checkout, orders, time_shipping
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.list import ListView
@@ -225,12 +225,24 @@ class CreateProduct(UserPassesTestMixin, LoginRequiredMixin, CreateView):
         return not self.request.user.groups.filter(name='Customer').exists()
     model = Product
     template_name = 'store/create_Product.html'
-    fields = ['title', 'description', 'price', 'photo', 'availability']
-    success_url = reverse_lazy('homeMain')
+    fields = ['title', 'description', 'price', 'salePrice', 'photo', 'slug', 'availability', 'category']
+    success_url = reverse_lazy('uploadimages')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(CreateProduct, self).form_valid(form)
+
+class UploadImages(LoginRequiredMixin, CreateView):
+    def test_func(self):
+        return not self.request.user.groups.filter(name='Customer').exists()
+    model = ProductImage
+    template_name = 'store/create_Product.html'
+    fields = ['product', 'featured', 'image']
+    success_url = reverse_lazy('homeMain')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(UploadImages, self).form_valid(form)
 
 
 class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
@@ -239,7 +251,7 @@ class UpdateProduct(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     model = Product
     template_name = 'store/update_Product.html'
     fields = ['title', 'description', 'price', 'photo', 'availability']
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('homeMain')
 
 
 class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
@@ -248,6 +260,20 @@ class DeleteProduct(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
     model = Product
     context_object_name = 'productsObject'
     template_name = 'store/delete_Product.html'
-    success_url = reverse_lazy('products')
+    success_url = reverse_lazy('homeMain')
 
+class OrderList(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'store/order.html'
+    context_object_name = 'productsObject'
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='Customer').exists()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['productsObject'] = context['productsObject'].filter(
+            user=self.request.user.id)
+
+        return context
 
