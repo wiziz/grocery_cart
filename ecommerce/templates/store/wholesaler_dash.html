@@ -35,16 +35,26 @@
 </div>
 
 
-<div id="tasklist" class="task-items-wrapper">
-    <div class="task-wrapper" data-position="{{task.pk}}">
-        <div class="task-title">
-            <table>
-                <tr>
-                    <th>Items</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-                {% for product in productsObject%}
+        <div class="container-fluid">
+      <div class="row mx-auto">
+  {% for product in productsObject %}
+    <div class="card mx-auto mb-3" style="width: 18rem;">
+  <img src="{{ product.photo.url}}" class="card-img-top" alt="..." width="200" height="200">
+  <div class="card-body">
+    <p class="card-title">{{ product.title}}</p>
+    <p class="card-text"><b> {{ product.price }}</b></p>
+    
+    <a href="/details/{{product.id}}/" class="btn btn-light border-sm">View</a>
+    <a href="/updateProduct/{{product.id}}/" class="btn btn-light border-sm">Edit</a>
+    <a href="/deleteProduct/{{product.id}}/" class="btn btn-light border-sm">Delete</a>
+  </div>
+</div>
+{% endfor %}
+    
+  </div>
+    </div>
+
+                <!-- {% for product in productsObject%}
                 <tr>
                     <td><img src = "{{product.photo.url}}">{{product.title}}</td>
                     <td>{{product.price}}</td>
@@ -52,7 +62,7 @@
                     <td><a href = "/updateProduct/{{product.id}}/">Edit</a></td>
                     <td><a href = "/deleteProduct/{{product.id}}/">Delete</a></td>
                 </tr>
-                {% endfor %}
+                {% endfor %} -->
         </div>
     </div>
 </div>
