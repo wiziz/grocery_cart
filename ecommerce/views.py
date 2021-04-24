@@ -159,11 +159,12 @@ def contact(request):
         firstName = request.POST['firstName']
         lastName = request.POST['lastName']
         email = request.POST['email']
+        message = request.POST['message']
         if request.user.is_authenticated: 
-            contact = Contact.objects.create( user=request.user, firstName=firstName, lastName=lastName,email=email)
+            contact = Contact.objects.create( user=request.user, firstName=firstName, lastName=lastName,email=email, message=message)
             contact.save()
         else:
-            contact = Contact.objects.create(firstName=firstName, lastName=lastName,email=email)
+            contact = Contact.objects.create(firstName=firstName, lastName=lastName,email=email, message=message)
             contact.save()
         messages.info(request, "Your feedback / questions has sent")
         return redirect('add_address')
@@ -172,16 +173,41 @@ def contact(request):
     return render(request, template, context)
 
 class RetailerDash(UserPassesTestMixin, LoginRequiredMixin, ListView):
-    model = User
+    model = Product
     template_name = 'store/retailer_dash.html'
-    context_object_name = 'userObject'
+    context_object_name = 'productsObject'
 
     def test_func(self):
         return self.request.user.groups.filter(name='Retailer').exists()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['userObject'] = context['userObject']
+        context['productsObject'] = context['productsObject'].filter(
+            user=self.request.user.id)
+
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['productsObject'] = context['productsObject'].filter(
+                name__icontains=search_input)
+
+            context['search_input'] = search_input
+        return context
+
+class Customers(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'store/customers.html'
+    context_object_name = 'userObject'
+
+    def test_func(self):
+        return not self.request.user.groups.filter(name='Customer').exists()
+
+    def get_context_data(self, **kwargs):
+        if self.request.user.groups.filter(name='Retailer').exists():
+            context = super().get_context_data(**kwargs)
+            context['userObject'] = context['userObject'].filter(groups=1)
+        else:
+            context = super().get_context_data(**kwargs)
+            context['userObject'] = context['userObject'].filter(groups=2)
 
         search_input = self.request.GET.get('search-area') or ''
         if search_input:

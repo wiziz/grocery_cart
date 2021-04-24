@@ -4,7 +4,7 @@ from django.urls import path, include
 from django.conf.urls import url, include, re_path
 from . import views
 from .views import ProductDetail, CreateProduct, UpdateProduct, DeleteProduct, RetailerDash, WholesalerDash, UploadImages
-from .views import register, homeMain, about, signin, logout_views, UniqueProduct, search, category, contact, OrderList
+from .views import register, homeMain, about, signin, logout_views, UniqueProduct, search, category, contact, OrderList, Customers
 from carts.views import cart, update_cart, delete_cart
 from orders.views import checkout, orders, time_shipping
 from accounts.views import add_address, profile
@@ -58,5 +58,6 @@ urlpatterns = [
     path('deleteProduct/<int:pk>/', DeleteProduct.as_view(), name='deleteProduct'),
     path('retailerDash/', RetailerDash.as_view(), name='retailerDash'),
     path('wholesalerDash/', WholesalerDash.as_view(), name='wholesalerDash'),
+    path('customers/', Customers.as_view(), name='customers'),
     path('orders/', OrderList.as_view(), name='orders'),
 ]
